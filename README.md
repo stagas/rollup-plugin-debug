@@ -1,5 +1,5 @@
 <h1>
-rollup-plugin-debug <a href="https://npmjs.org/package/rollup-plugin-debug"><img src="https://img.shields.io/badge/npm-v0.0.0-F00.svg?colorA=000"/></a> <a href="src"><img src="https://img.shields.io/badge/loc-176-FFF.svg?colorA=000"/></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-F0B.svg?colorA=000"/></a>
+rollup-plugin-debug <a href="https://npmjs.org/package/rollup-plugin-debug"><img src="https://img.shields.io/badge/npm-v0.0.1-F00.svg?colorA=000"/></a> <a href="src"><img src="https://img.shields.io/badge/loc-176-FFF.svg?colorA=000"/></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-F0B.svg?colorA=000"/></a>
 </h1>
 
 <p></p>
