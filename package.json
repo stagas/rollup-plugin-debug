@@ -5,7 +5,6 @@
   "description": "Console debug statements that can be pattern toggled at compile time from comments in the code.",
   "version": "0.0.1",
   "license": "MIT",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://git@github.com:stagas/rollup-plugin-debug.git"
