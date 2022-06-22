@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`debug ignores 1`] = `
+"//!? 'hello world'
+const someVar = 123;
+//!warn 'warning', someVar
+//!time 'time'
+//!timeEnd 'time'
+console.log('sink', someVar);
+//!> alert('hello')
+"
+`;
+
+exports[`debug printId 1`] = `
+"console.debug('\\\\x1B[38;2;255;238;136mrollup-plugin-debug:test:fixtures:sink\\\\x1B[m ' + 'hello world');
+const someVar = 123;
+console.warn('\\\\x1B[38;2;255;238;136mrollup-plugin-debug:test:fixtures:sink\\\\x1B[m ' + 'warning', someVar);
+console.time('\\\\x1B[38;2;255;238;136mrollup-plugin-debug:test:fixtures:sink\\\\x1B[m ' + 'time');
+console.timeEnd('\\\\x1B[38;2;255;238;136mrollup-plugin-debug:test:fixtures:sink\\\\x1B[m ' + 'time');
+console.log('sink', someVar);
+alert('hello');
+"
+`;
+
+exports[`debug removes 1`] = `
+"const someVar = 123;
+
+
+
+console.log('sink', someVar);
+"
+`;
+
+exports[`debug works 1`] = `
+"console.debug('hello world');
+const someVar = 123;
+console.warn('warning', someVar);
+console.time('time');
+console.timeEnd('time');
+console.log('sink', someVar);
+alert('hello');
+"
+`;
