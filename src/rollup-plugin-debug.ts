@@ -20,6 +20,8 @@ export interface RollupPluginDebugOptions {
   include?: Parameters<CreateFilter>[0]
   /** Exclude patterns. */
   exclude?: Parameters<CreateFilter>[1]
+  /** Debug matcher (overrides Env variable) */
+  debugMatcher?: string
   /** Environment name. Default: `ROLLUP_DEBUG` */
   debugEnvName?: string
   /** Whether to print colored label ids. Default: true */
@@ -91,6 +93,8 @@ export default function debug(options: RollupPluginDebugOptions = {}): Plugin {
 
   const debugEnvName = options.debugEnvName ?? 'ROLLUP_DEBUG'
 
+  const debugMatcher = options.debugMatcher?.trim() || process.env[debugEnvName]
+
   const replacer = options.replacer ??= (payload, kind, id, color) => {
     const [r, g, b] = color.split('').map(x => parseInt(x + x, 16))
     if (kind === 'literal') {
@@ -147,12 +151,12 @@ export default function debug(options: RollupPluginDebugOptions = {}): Plugin {
         const withoutExt = resolved.replace(path.extname(resolved), '')
         const relative = path.relative(path.dirname(pkg.path), withoutExt)
 
-        log('env:', process.env[debugEnvName] ?? '<none>')
+        log('match:', debugMatcher ?? '<none>')
 
         const debugId = [pkg.data.name, ...relative.split('/').filter(x => !options.removeParts!.includes(x))].join(':')
         log('id:', debugId)
 
-        const enabled = matchNamespace(process.env[debugEnvName] ?? '', debugId)
+        const enabled = matchNamespace(debugMatcher ?? '', debugId)
         log('enabled:', enabled)
 
         if (enabled) return debugId
