@@ -24,6 +24,8 @@ export interface RollupPluginDebugOptions {
   debugMatcher?: string
   /** Environment name. Default: `ROLLUP_DEBUG` */
   debugEnvName?: string
+  /** Enable runtime `localStorage.DEBUG='<regexp>'` */
+  runtimeDebug?: boolean
   /** Whether to print colored label ids. Default: true */
   printId?: boolean
   /** Whether to erase the comment completely when not matched. Default: false */
@@ -89,7 +91,11 @@ interface DebugExecOutput extends RegExpExecArray {
 export default function debug(options: RollupPluginDebugOptions = {}): Plugin {
   options.removeParts ??= ['lib', 'src', 'dist', 'esm', 'cjs']
 
-  const filter = createFilter(options.include, options.exclude)
+  let exclude: Parameters<CreateFilter>[1] = [/\/@virtual.*/]
+  if (Array.isArray(options.exclude)) exclude = [...exclude, ...options.exclude]
+  else if (typeof options.exclude === 'string' || options.exclude instanceof RegExp) exclude.push(options.exclude)
+  const filter = createFilter(options.include, exclude)
+  log('excluding', exclude)
 
   const debugEnvName = options.debugEnvName ?? 'ROLLUP_DEBUG'
 
@@ -103,14 +109,16 @@ export default function debug(options: RollupPluginDebugOptions = {}): Plugin {
       const startsWithString = '\'"`'.split('').includes(payload.trim()[0])
       const label = `\\x1B[38;2;${r};${g};${b}m${id}\\x1B[m`
       const result = (options.printId && !coloredKinds.includes(kind)
-        ? `console.log('${label}');`
+        ? `console.log('${label}'),`
         : '')
         + `console.${kind}(${
           options.printId && coloredKinds.includes(kind)
             ? (`'${label}${startsWithString ? ' \' + ' : '\','}`)
             : ''
         }${payload.trim()})`
-      return result
+      return options.runtimeDebug
+        ? `;new RegExp( ( typeof window==='object'?location.hash.split('debug=')[1]:new URL(import.meta.url).searchParams.get('debug') ) || '%%%' ).test('${id}')&&(${result});`
+        : result
     }
   }
 
